@@ -304,6 +304,16 @@ class Provider extends AbstractProvider implements SocialiteProvider
                     $this->user->map([$key => $attribute->getFirstAttributeValue()]);
                 }
             }
+            
+            if (!$this->user->name) {
+                if ($attribute = $attributeStatement->getFirstAttributeByName(ClaimTypes::GIVEN_NAME)) {
+                    $this->user->name = $attribute->getFirstAttributeValue();
+                }
+
+                if ($attribute = $attributeStatement->getFirstAttributeByName(ClaimTypes::SURNAME)) {
+                    $this->user->name = trim($this->user->name . " " . $attribute->getFirstAttributeValue());
+                }
+            }            
 
             $this->user->setRaw($attributeStatement->getAllAttributes());
         }
